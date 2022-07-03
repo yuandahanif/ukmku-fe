@@ -5,7 +5,12 @@ export default function Component() {
   const { data: session, status } = useSession();
 
   if (status === 'authenticated') {
-    return <p>Signed in as {session?.user?.email}</p>;
+    return (
+      <div>
+        <p>Signed in as {session?.user?.email}</p>
+        <p>with role {session?.user?.role}</p>
+      </div>
+    );
   }
 
   return (

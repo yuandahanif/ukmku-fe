@@ -2,11 +2,13 @@ import { AppProps } from 'next/app';
 import { SessionProvider, useSession } from 'next-auth/react';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
+import { Auth } from 'types/Auth';
+import CustomNextPage from 'types/custom_next_page';
 
 import '@/styles/globals.css';
 
 interface CustomAppProps extends Omit<AppProps, 'Component'> {
-  Component: AppProps['Component'] & { Layout: JSX.Element; Auth: boolean };
+  Component: CustomNextPage;
 }
 
 function MyApp({
@@ -19,7 +21,7 @@ function MyApp({
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         {Component.Auth ? (
-          <Auth>
+          <Auth setting={Component.Auth}>
             <Component {...pageProps} />
           </Auth>
         ) : (
@@ -31,12 +33,16 @@ function MyApp({
   );
 }
 
-function Auth({ children }: { children: JSX.Element }) {
+function Auth({ children, setting }: { children: JSX.Element; setting: Auth }) {
   // if `{ required: true }` is supplied, `status` can only be "loading" or "authenticated"
-  const { status } = useSession({ required: true });
+  const { data, status } = useSession({ required: true });
 
   if (status === 'loading') {
     return <div>Loading...</div>;
+  }
+
+  if (data && data.user.role !== setting.role) {
+    return <div>upss, wrong role</div>;
   }
 
   return children;
