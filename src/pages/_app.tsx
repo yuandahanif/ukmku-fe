@@ -38,11 +38,21 @@ function Auth({ children, setting }: { children: JSX.Element; setting: Auth }) {
   const { data, status } = useSession({ required: true });
 
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        <span className='text-5xl font-light text-gray-700'>Loading...</span>
+      </div>
+    );
   }
 
-  if (data && data.user.role !== setting.role) {
-    return <div>upss, wrong role</div>;
+  if (data && setting.role && data.user.role !== setting.role) {
+    return (
+      <div className='flex h-screen items-center justify-center'>
+        <span className='text-5xl font-light text-gray-700'>
+          Upss, wrong role
+        </span>
+      </div>
+    );
   }
 
   return children;
