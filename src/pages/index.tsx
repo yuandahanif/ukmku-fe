@@ -16,7 +16,9 @@ export default function HomePage() {
     <Layout>
       <Seo templateTitle='Beranda' />
 
-      <main className='h-screen w-full bg-red-100'></main>
+      <main className='w-full py-40 text-center'>
+        <h1>Landing page diisi nanti</h1>
+      </main>
     </Layout>
   );
 }
