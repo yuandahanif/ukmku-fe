@@ -22,10 +22,24 @@ function MyApp({
       <QueryClientProvider client={queryClient}>
         {Component.Auth ? (
           <Auth setting={Component.Auth}>
-            <Component {...pageProps} />
+            {Component.Layout ? (
+              <Component.Layout>
+                <Component {...pageProps} />
+              </Component.Layout>
+            ) : (
+              <>
+                <Component {...pageProps} />
+              </>
+            )}
           </Auth>
+        ) : Component.Layout ? (
+          <Component.Layout>
+            <Component {...pageProps} />
+          </Component.Layout>
         ) : (
-          <Component {...pageProps} />
+          <>
+            <Component {...pageProps} />
+          </>
         )}
         <ReactQueryDevtools initialIsOpen={false} />
       </QueryClientProvider>

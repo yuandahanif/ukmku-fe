@@ -47,7 +47,7 @@ const ProfilePopup = () => {
 
           <ul className='mt-3 w-full space-y-2 border-t pt-3 text-center'>
             <li>
-              <UnstyledLink className='text-sm' href='/'>
+              <UnstyledLink className='text-sm' href='/dashboard'>
                 Dashboard
               </UnstyledLink>
             </li>

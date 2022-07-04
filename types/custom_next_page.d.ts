@@ -2,7 +2,7 @@ import { AppProps } from 'next/app';
 import { Auth } from 'types/Auth';
 
 export type LayoutAndAuth = {
-  Layout?: JSX.Element;
+  Layout?: ({ children }: { children: React.ReactNode }) => JSX.Element;
   Auth: Auth;
 };
 
