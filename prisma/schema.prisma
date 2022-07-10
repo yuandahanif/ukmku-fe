@@ -1,0 +1,156 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Categories {
+  id            Int                       @id @default(autoincrement())
+  name          String                    @db.VarChar(255)
+  clasification Categories_clasification? @default(idea)
+  createdAt     DateTime                  @db.DateTime(0)
+  updatedAt     DateTime                  @db.DateTime(0)
+  Ideas         Ideas[]
+}
+
+model Evaluation_surveis {
+  id           Int          @id @default(autoincrement())
+  name         Int
+  // lampiran_url String       @db.LongText
+  Files        Files[]
+  done_at      DateTime     @db.DateTime(0)
+  createdAt    DateTime     @db.DateTime(0)
+  updatedAt    DateTime     @db.DateTime(0)
+  EvaluationId Int?
+  Evaluations  Evaluations? @relation(fields: [EvaluationId], references: [id], map: "Evaluation_surveis_ibfk_1")
+  Ideas        Ideas[]
+
+  @@index([EvaluationId], map: "EvaluationId")
+}
+
+model Evaluations {
+  id                 Int                  @id @default(autoincrement())
+  name               Int
+  umkm_name          String               @db.VarChar(255)
+  location           String               @db.LongText
+  // lampiran_url       String               @db.LongText
+  Files              Files[]
+  description        String               @db.LongText
+  createdAt          DateTime             @db.DateTime(0)
+  updatedAt          DateTime             @db.DateTime(0)
+  Evaluation_surveis Evaluation_surveis[]
+}
+
+model Files {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  url       String   @db.MediumText
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  // IdeaId    Int?
+  // Ideas     Ideas?   @relation(fields: [IdeaId], references: [id], map: "Files_ibfk_1")
+
+  // @@index([IdeaId], map: "IdeaId")
+  Ideas                Ideas?              @relation(fields: [ideasId], references: [id])
+  ideasId              Int?
+  Evaluation_surveis   Evaluation_surveis? @relation(fields: [evaluation_surveisId], references: [id])
+  evaluation_surveisId Int?
+  Evaluations          Evaluations?        @relation(fields: [evaluationsId], references: [id])
+  evaluationsId        Int?
+  Financial_reports    Financial_reports?  @relation(fields: [financial_reportsId], references: [id])
+  financial_reportsId  Int?
+}
+
+model Financial_reports {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  description String   @db.LongText
+  profit      Int
+  fund        Int
+  // lampiran_url String   @db.LongText
+  Files       Files[]
+  createdAt   DateTime @db.DateTime(0)
+  updatedAt   DateTime @db.DateTime(0)
+  IdeaId      Int?
+  Ideas       Ideas?   @relation(fields: [IdeaId], references: [id], map: "Financial_reports_ibfk_1")
+
+  @@index([IdeaId], map: "IdeaId")
+}
+
+model Fund_transactions {
+  id        Int      @id @default(autoincrement())
+  total     Int
+  createdAt DateTime @db.DateTime(0)
+  updatedAt DateTime @db.DateTime(0)
+  IdeaId    Int?
+  Ideas     Ideas?   @relation(fields: [IdeaId], references: [id], map: "Fund_transactions_ibfk_1")
+
+  @@index([IdeaId], map: "IdeaId")
+}
+
+model Ideas {
+  id                  Int                   @id @default(autoincrement())
+  name                String                @db.VarChar(255)
+  description         String                @db.LongText
+  required_fund       String                @db.VarChar(255)
+  location            String                @db.MediumText
+  status              Ideas_status          @default(panding)
+  createdAt           DateTime              @db.DateTime(0)
+  updatedAt           DateTime              @db.DateTime(0)
+  UserId              Int?
+  CategoryId          Int?
+  EvaluationSurveiId  Int?
+  Categories          Categories?           @relation(fields: [CategoryId], references: [id], map: "Ideas_ibfk_2")
+  Evaluation_surveis  Evaluation_surveis?   @relation(fields: [EvaluationSurveiId], references: [id], map: "Ideas_ibfk_3")
+  Users               Users?                @relation(fields: [UserId], references: [id], map: "Ideas_ibfk_1")
+  Files               Files[]
+  Financial_reports   Financial_reports[]
+  Fund_transactions   Fund_transactions[]
+  Reject_fund_reasons Reject_fund_reasons[]
+
+  @@index([CategoryId], map: "CategoryId")
+  @@index([EvaluationSurveiId], map: "EvaluationSurveiId")
+  @@index([UserId], map: "UserId")
+}
+
+model Reject_fund_reasons {
+  id          Int      @id @default(autoincrement())
+  description String?  @db.LongText
+  createdAt   DateTime @db.DateTime(0)
+  updatedAt   DateTime @db.DateTime(0)
+  IdeaId      Int?
+  Ideas       Ideas?   @relation(fields: [IdeaId], references: [id], map: "Reject_fund_reasons_ibfk_1")
+
+  @@index([IdeaId], map: "IdeaId")
+}
+
+model Users {
+  id        Int        @id @default(autoincrement())
+  name      String     @db.VarChar(255)
+  username  String     @db.VarChar(255)
+  password  String     @db.VarChar(255)
+  email     String     @db.VarChar(255)
+  role      Users_role
+  createdAt DateTime   @db.DateTime(0)
+  updatedAt DateTime   @db.DateTime(0)
+  Ideas     Ideas[]
+}
+
+enum Categories_clasification {
+  idea
+  evaluation
+}
+
+enum Ideas_status {
+  funded
+  canceled
+  panding
+}
+
+enum Users_role {
+  admin
+  umkm
+}

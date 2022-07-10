@@ -47,7 +47,7 @@ export default NextAuth({
           email: string;
           role: Role;
           name: string;
-        }>((process.env.API_URL as string) + '/login', {
+        }>((process.env.NEXT_PUBLIC_BACKEND_URL as string) + '/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
