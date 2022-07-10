@@ -23,7 +23,7 @@ const Table: React.FC<Props> = ({ data, columns }) => {
                     <th
                       key={key}
                       {...restProps}
-                      className='w-fit border bg-gray-300 py-1'
+                      className='w-fit border bg-yellow-200 py-2'
                     >
                       {column.render('Header')}
                     </th>
