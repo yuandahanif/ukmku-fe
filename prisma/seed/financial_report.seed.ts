@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { faker } from '@faker-js/faker';
-import { Prisma } from '@prisma/client';
+import { Month, Prisma } from '@prisma/client';
 
 import { prisma } from '../../src/lib/prisma';
 
@@ -19,14 +19,33 @@ export default async function financial_report() {
   const financual_reports: Prisma.Financial_reportsCreateManyInput[] = [];
   ideas.forEach((idea) => {
     for (let i = 0; i < 12; i++) {
+      const month_enum: Month[] = [
+        'januari',
+        'februari',
+        'maret',
+        'april',
+        'mei',
+        'juni',
+        'juli',
+        'agustus',
+        'september',
+        'oktober',
+        'november',
+        'desember',
+      ];
+
       const month = i + 1 < 10 ? `0${i + 1}` : `${i + 1}`;
+      const createdAt = new Date(`2021-${month}-03T03:24:00`);
+
       financual_reports.push({
         title: `Laporan bulan-${i + 1} ${idea.name}`,
         description: faker.lorem.sentences(),
         fund: Number(faker.random.numeric(6)),
         profit: Number(faker.random.numeric(6)),
         IdeaId: idea.id,
-        createdAt: new Date(`2021-${month}-03T03:24:00`).toISOString(),
+        year: createdAt.getFullYear(),
+        month: month_enum[i],
+        createdAt: createdAt.toISOString(),
       });
     }
   });

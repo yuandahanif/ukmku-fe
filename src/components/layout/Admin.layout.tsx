@@ -11,7 +11,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <SidebarAdmin />
           <div className='flex h-full w-full flex-col'>
             <HeaderAdmin />
-            <div className='px-3 py-4'>{children}</div>
+            <div className='px-3 py-4 pb-20'>{children}</div>
           </div>
         </div>
       </div>
