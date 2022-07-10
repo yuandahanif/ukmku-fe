@@ -1,4 +1,4 @@
-export type Role = 'Admin' | 'UMKM';
+export type Role = 'admin' | 'umkm';
 
 export interface Auth {
   role?: Role;

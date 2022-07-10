@@ -109,7 +109,7 @@ const AdminIdeaIndex: NextPageWithLayoutAndAuth = () => {
   );
 };
 
-AdminIdeaIndex.Auth = { role: 'Admin' };
+AdminIdeaIndex.Auth = { role: 'admin' };
 AdminIdeaIndex.Layout = AdminLayout;
 
 export default AdminIdeaIndex;

@@ -1,8 +1,9 @@
+import { PrismaClient } from '@prisma/client';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
-import { Role } from 'types/Auth';
+import { z } from 'zod';
 
-import fetchJson from '@/lib/fatchJson';
+const prisma = new PrismaClient();
 
 export default NextAuth({
   providers: [
@@ -22,8 +23,8 @@ export default NextAuth({
         }
 
         return {
-          username: credentials?.username,
-          password: credentials?.password,
+          username: credentials.username,
+          password: credentials.password,
         };
       },
     }),
@@ -41,36 +42,36 @@ export default NextAuth({
   callbacks: {
     async signIn({ user, credentials }) {
       try {
-        const { data, code } = await fetchJson<{
-          id: string;
-          token: string;
-          email: string;
-          role: Role;
-          name: string;
-        }>((process.env.NEXT_PUBLIC_BACKEND_URL as string) + '/login', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            username: credentials?.username,
-            password: credentials?.password,
-          }),
+        const schema = z.object({
+          username: z.string(),
+          password: z.string(),
         });
 
-        if (code == '200') {
-          user.id = data.id;
+        const validated = schema.parse({
+          username: credentials?.username,
+          password: credentials?.password,
+        });
+
+        const data = await prisma.users.findFirst({
+          where: {
+            username: validated.username,
+            password: validated.password,
+          },
+        });
+
+        if (data) {
+          user.id = String(data.id);
           user.email = data.email;
           user.name = data.name;
           user.role = data.role;
-          user.token = data.token;
 
           return true;
         }
 
-        return false;
+        throw 'user not found';
       } catch (error) {
-        return false;
+        // return error;
+        return '/unauthorized';
       }
     },
     async jwt({ token, user }) {
@@ -79,7 +80,6 @@ export default NextAuth({
         token.email = user.email;
         token.name = user.name;
         token.role = user.role;
-        token.token = user.token;
       }
       return token;
     },

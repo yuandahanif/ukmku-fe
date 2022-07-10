@@ -51,7 +51,7 @@ const AdminDashboardIndex: NextPageWithLayoutAndAuth = () => {
   );
 };
 
-AdminDashboardIndex.Auth = { role: 'Admin' };
+AdminDashboardIndex.Auth = { role: 'admin' };
 AdminDashboardIndex.Layout = AdminLayout;
 
 export default AdminDashboardIndex;

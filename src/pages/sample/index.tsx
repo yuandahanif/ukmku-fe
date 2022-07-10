@@ -4,6 +4,6 @@ const Sample: NextPageWithLayoutAndAuth = () => {
   return <div>this is sample page</div>;
 };
 
-Sample.Auth = { role: 'Admin' };
+Sample.Auth = { role: 'admin' };
 
 export default Sample;

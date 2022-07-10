@@ -6,7 +6,6 @@ declare module 'next-auth' {
    * Returned by `useSession`, `getSession` and received as a prop on the `SessionProvider` React Context
    */
   interface Session {
-    AccessToken: string;
     user: {
       /** The user's postal address. */
       role: Role;
@@ -20,7 +19,6 @@ declare module 'next-auth' {
     id: string;
     name: string;
     email: string;
-    token: string;
     role: Role;
   }
 }
@@ -32,7 +30,6 @@ declare module 'next-auth/jwt' {
     id: string;
     name: string;
     email: string;
-    token: string;
     role: Role;
   }
 }

@@ -4,6 +4,6 @@ const UMKMDashboardIndex: NextPageWithLayoutAndAuth = () => {
   return <div>this is sample page</div>;
 };
 
-UMKMDashboardIndex.Auth = { role: 'UMKM' };
+UMKMDashboardIndex.Auth = { role: 'umkm' };
 
 export default UMKMDashboardIndex;
