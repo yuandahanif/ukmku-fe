@@ -11,8 +11,8 @@ model Categories {
   id            Int                       @id @default(autoincrement())
   name          String                    @db.VarChar(255)
   clasification Categories_clasification? @default(idea)
-  createdAt     DateTime                  @db.DateTime(0)
-  updatedAt     DateTime                  @db.DateTime(0)
+  createdAt     DateTime                  @default(now())
+  updatedAt     DateTime                  @updatedAt
   Ideas         Ideas[]
 }
 
@@ -22,8 +22,8 @@ model Evaluation_surveis {
   // lampiran_url String       @db.LongText
   Files        Files[]
   done_at      DateTime     @db.DateTime(0)
-  createdAt    DateTime     @db.DateTime(0)
-  updatedAt    DateTime     @db.DateTime(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
   EvaluationId Int?
   Evaluations  Evaluations? @relation(fields: [EvaluationId], references: [id], map: "Evaluation_surveis_ibfk_1")
   Ideas        Ideas[]
@@ -39,8 +39,8 @@ model Evaluations {
   // lampiran_url       String               @db.LongText
   Files              Files[]
   description        String               @db.LongText
-  createdAt          DateTime             @db.DateTime(0)
-  updatedAt          DateTime             @db.DateTime(0)
+  createdAt          DateTime             @default(now())
+  updatedAt          DateTime             @updatedAt
   Evaluation_surveis Evaluation_surveis[]
 }
 
@@ -48,8 +48,8 @@ model Files {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(255)
   url       String   @db.MediumText
-  createdAt DateTime @db.DateTime(0)
-  updatedAt DateTime @db.DateTime(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   // IdeaId    Int?
   // Ideas     Ideas?   @relation(fields: [IdeaId], references: [id], map: "Files_ibfk_1")
 
@@ -72,8 +72,8 @@ model Financial_reports {
   fund        Int
   // lampiran_url String   @db.LongText
   Files       Files[]
-  createdAt   DateTime @db.DateTime(0)
-  updatedAt   DateTime @db.DateTime(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   IdeaId      Int?
   Ideas       Ideas?   @relation(fields: [IdeaId], references: [id], map: "Financial_reports_ibfk_1")
 
@@ -83,8 +83,8 @@ model Financial_reports {
 model Fund_transactions {
   id        Int      @id @default(autoincrement())
   total     Int
-  createdAt DateTime @db.DateTime(0)
-  updatedAt DateTime @db.DateTime(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
   IdeaId    Int?
   Ideas     Ideas?   @relation(fields: [IdeaId], references: [id], map: "Fund_transactions_ibfk_1")
 
@@ -98,8 +98,8 @@ model Ideas {
   required_fund       String                @db.VarChar(255)
   location            String                @db.MediumText
   status              Ideas_status          @default(panding)
-  createdAt           DateTime              @db.DateTime(0)
-  updatedAt           DateTime              @db.DateTime(0)
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
   UserId              Int?
   CategoryId          Int?
   EvaluationSurveiId  Int?
@@ -119,8 +119,8 @@ model Ideas {
 model Reject_fund_reasons {
   id          Int      @id @default(autoincrement())
   description String?  @db.LongText
-  createdAt   DateTime @db.DateTime(0)
-  updatedAt   DateTime @db.DateTime(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
   IdeaId      Int?
   Ideas       Ideas?   @relation(fields: [IdeaId], references: [id], map: "Reject_fund_reasons_ibfk_1")
 
@@ -134,8 +134,8 @@ model Users {
   password  String     @db.VarChar(255)
   email     String     @db.VarChar(255)
   role      Users_role
-  createdAt DateTime   @db.DateTime(0)
-  updatedAt DateTime   @db.DateTime(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
   Ideas     Ideas[]
 }
 

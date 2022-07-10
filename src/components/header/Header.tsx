@@ -1,6 +1,7 @@
 import { signIn, useSession } from 'next-auth/react';
 
 import Button from '@/components/buttons/Button';
+import ButtonLink from '@/components/links/ButtonLink';
 import UnstyledLink from '@/components/links/UnstyledLink';
 import ProfilePopup from '@/components/popup/Profile';
 
@@ -15,12 +16,17 @@ const Header = () => {
         <UnstyledLink href='/'>
           <Logo className='h-16 w-40' />
         </UnstyledLink>
-        <div>
+        <div className='space-x-1'>
           {status === 'loading' && <Button isLoading variant='ghost' />}
           {status === 'unauthenticated' && (
-            <Button variant='ghost' onClick={() => signIn('credentials')}>
-              Masuk
-            </Button>
+            <>
+              <ButtonLink variant='ghost' href='/auth/register'>
+                Daftar
+              </ButtonLink>
+              <Button variant='ghost' onClick={() => signIn('credentials')}>
+                Masuk
+              </Button>
+            </>
           )}
 
           {status === 'authenticated' && <ProfilePopup />}

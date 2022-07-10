@@ -1,9 +1,9 @@
-import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 import NextAuth from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { z } from 'zod';
 
-const prisma = new PrismaClient();
+import { prisma } from '@/lib/prisma';
 
 export default NextAuth({
   providers: [
@@ -55,11 +55,13 @@ export default NextAuth({
         const data = await prisma.users.findFirst({
           where: {
             username: validated.username,
-            password: validated.password,
           },
         });
 
         if (data) {
+          const valid = bcrypt.compareSync(validated.password, data?.password);
+          if (!valid) throw 'pasword incorect';
+
           user.id = String(data.id);
           user.email = data.email;
           user.name = data.name;
@@ -71,6 +73,7 @@ export default NextAuth({
         throw 'user not found';
       } catch (error) {
         // return error;
+
         return '/unauthorized';
       }
     },

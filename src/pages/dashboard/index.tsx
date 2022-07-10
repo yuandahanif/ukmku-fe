@@ -10,10 +10,10 @@ const DashboardIndex: NextPageWithLayoutAndAuth = () => {
   useEffect(() => {
     if (data) {
       switch (data.user.role) {
-        case 'Admin':
+        case 'admin':
           router.replace('/dashboard/admin');
           break;
-        case 'UMKM':
+        case 'umkm':
           router.replace('/dashboard/umkm');
           break;
       }
