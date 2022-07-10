@@ -1,109 +1,168 @@
-import { useMemo } from 'react';
-import { useTable } from 'react-table';
+import { Categories_clasification, Ideas, Users } from '@prisma/client';
+import { useMemo, useState } from 'react';
+import { useQuery } from 'react-query';
 import { NextPageWithLayoutAndAuth } from 'types/custom_next_page';
 
+import fetchJson from '@/lib/fatchJson';
+
+import Button from '@/components/buttons/Button';
 import AdminLayout from '@/components/layout/Admin.layout';
+import ButtonLink from '@/components/links/ButtonLink';
 import Seo from '@/components/Seo';
+import Table from '@/components/table/Table';
 
 const AdminIdeaIndex: NextPageWithLayoutAndAuth = () => {
-  const data = useMemo(
-    () => [
-      {
-        col1: 'Hello',
-        col2: 'World',
-      },
-      {
-        col1: 'react-table',
-        col2: 'rocks',
-      },
-      {
-        col1: 'whatever',
-        col2: 'you want',
-      },
-    ],
-    []
+  const [tableType, setTableType] = useState<'panding' | 'canceled' | 'funded'>(
+    'panding'
   );
 
-  const columns = useMemo(
+  const ideaQuery = useQuery('admin/idea/all', () =>
+    fetchJson<{
+      pending: (Ideas & Categories_clasification & Users)[];
+      canceled: (Ideas & Categories_clasification & Users)[];
+      funded: (Ideas & Categories_clasification & Users)[];
+    }>('/api/idea')
+  );
+
+  const pandingTableData = useMemo(() => {
+    if (ideaQuery.data?.data.pending) {
+      return ideaQuery.data?.data.pending;
+    }
+
+    return [];
+  }, [ideaQuery.data?.data.pending]);
+
+  const pandingTableColumn = useMemo(
     () => [
       {
         Header: 'No',
         id: 'no',
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        accessor: (_: any, index: number) => (
-          <span className='inline-block px-2'>{index + 1}</span>
+        accessor: (_: unknown, index: number) => index + 1,
+        Cell: ({ value }: { value: string | number }) => (
+          <span className='inline-block w-10 text-center'>{value}</span>
         ),
       },
       {
-        Header: 'Name',
-        accessor: 'col1', // accessor is the "key" in the data
+        Header: 'Nama UMKM',
+        accessor: 'name',
       },
       {
-        Header: 'Column 2',
-        id: 'col2',
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        accessor: (row: any) => (
-          <span className='inline-block w-60 '>{row?.col2}</span>
+        Header: 'Permintaan Modal',
+        accessor: 'required_fund',
+        Cell: ({ value }: { value: string | number }) => (
+          <span className='inline-block w-60 text-center'>{value}</span>
+        ),
+      },
+      {
+        Header: 'Oleh',
+        accessor: 'Users.name',
+      },
+      {
+        Header: 'Kategori',
+        accessor: 'Categories.name',
+      },
+      {
+        Header: 'Aksi',
+        accessor: 'id',
+        Cell: ({ value }: { value: string | number }) => (
+          <div>
+            <ButtonLink
+              variant='outline'
+              href={`/dashboard/admin/idea/${value}`}
+            >
+              Detail
+            </ButtonLink>
+          </div>
         ),
       },
     ],
     []
   );
 
-  const { getTableProps, getTableBodyProps, headerGroups, rows, prepareRow } =
-    useTable<Record<string, unknown>>({ data, columns });
+  const canceledTableData = useMemo(() => {
+    if (ideaQuery.data?.data.canceled) {
+      return ideaQuery.data?.data.canceled;
+    }
+
+    return [];
+  }, [ideaQuery.data?.data.canceled]);
+
+  const fundedTableData = useMemo(() => {
+    if (ideaQuery.data?.data.funded) {
+      return ideaQuery.data?.data.funded;
+    }
+
+    return [];
+  }, [ideaQuery.data?.data.funded]);
 
   return (
     <>
       <Seo templateTitle='Admin Ide Bisnis' />
       <div className=''>
-        <table {...getTableProps()} className='w-fit'>
-          <thead>
-            {headerGroups.map((headerGroup) => {
-              const { key, ...restProps } = headerGroup.getHeaderGroupProps();
-              return (
-                <tr key={key} {...restProps}>
-                  {headerGroup.headers.map((column) => {
-                    const { key, ...restProps } = column.getHeaderProps();
-                    return (
-                      <th
-                        key={key}
-                        {...restProps}
-                        className='w-fit border bg-gray-300 py-1'
-                      >
-                        {column.render('Header')}
-                      </th>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </thead>
+        <div className='mb-1 flex justify-end gap-x-4'>
+          <Button
+            variant={tableType == 'panding' ? 'primary' : 'outline'}
+            disabled={tableType == 'panding'}
+            type='button'
+            onClick={() => setTableType('panding')}
+          >
+            Pengajuan
+          </Button>
+          <Button
+            variant={tableType == 'funded' ? 'primary' : 'outline'}
+            disabled={tableType == 'funded'}
+            type='button'
+            onClick={() => setTableType('funded')}
+          >
+            Didanai
+          </Button>
+          <Button
+            variant={tableType == 'canceled' ? 'primary' : 'outline'}
+            disabled={tableType == 'canceled'}
+            type='button'
+            onClick={() => setTableType('canceled')}
+          >
+            Ditolak
+          </Button>
+        </div>
+        {tableType == 'panding' && ideaQuery.data?.data.pending && (
+          <>
+            <h2 className='mb-1 text-xl'>Daftar pengajuan UMKM</h2>
+            <span className='mb-3 inline-block'>
+              Total: {ideaQuery.data?.data.pending.length}
+            </span>
+            <Table
+              columns={pandingTableColumn as never}
+              data={pandingTableData as never}
+            />
+          </>
+        )}
 
-          <tbody {...getTableBodyProps()}>
-            {rows.map((row) => {
-              prepareRow(row);
+        {tableType == 'funded' && ideaQuery.data?.data.funded && (
+          <>
+            <h2 className='mb-1 text-xl'>Daftar pengajuan UMKM didanai</h2>
+            <span className='mb-3 inline-block'>
+              Total: {ideaQuery.data?.data.funded.length}
+            </span>
+            <Table
+              columns={pandingTableColumn as never}
+              data={fundedTableData as never}
+            />
+          </>
+        )}
 
-              const { key, ...restProps } = row.getRowProps();
-              return (
-                <tr key={key} {...restProps}>
-                  {row.cells.map((cell) => {
-                    const { key, ...restProps } = cell.getCellProps();
-                    return (
-                      <td
-                        key={key}
-                        {...restProps}
-                        className='w-fit border py-1 px-2'
-                      >
-                        {cell.render('Cell')}
-                      </td>
-                    );
-                  })}
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
+        {tableType == 'canceled' && ideaQuery.data?.data.canceled && (
+          <>
+            <h2 className='mb-1 text-xl'>Daftar pengajuan UMKM ditolak</h2>
+            <span className='mb-3 inline-block'>
+              Total: {ideaQuery.data?.data.canceled.length}
+            </span>
+            <Table
+              columns={pandingTableColumn as never}
+              data={canceledTableData as never}
+            />
+          </>
+        )}
       </div>
     </>
   );
