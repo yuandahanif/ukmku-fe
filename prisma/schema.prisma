@@ -18,22 +18,24 @@ model Categories {
 
 model Evaluation_surveis {
   id           Int          @id @default(autoincrement())
-  name         Int
+  name         String       @db.LongText
   // lampiran_url String       @db.LongText
   Files        Files[]
   done_at      DateTime     @db.DateTime(0)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   EvaluationId Int?
+  IdeaId       Int?
   Evaluations  Evaluations? @relation(fields: [EvaluationId], references: [id], map: "Evaluation_surveis_ibfk_1")
-  Ideas        Ideas[]
+  Idea         Ideas?       @relation(fields: [IdeaId], references: [id], map: "Evaluation_surveis_ibfk_2")
 
   @@index([EvaluationId], map: "EvaluationId")
+  @@index([IdeaId], map: "IdeaId")
 }
 
 model Evaluations {
   id                 Int                  @id @default(autoincrement())
-  name               Int
+  name               String               @db.LongText
   umkm_name          String               @db.VarChar(255)
   location           String               @db.LongText
   // lampiran_url       String               @db.LongText
@@ -66,7 +68,7 @@ model Files {
 
 model Financial_reports {
   id          Int      @id @default(autoincrement())
-  title       String   @db.VarChar(255)
+  title       String   @db.Text
   description String   @db.LongText
   profit      Int
   fund        Int
@@ -95,7 +97,7 @@ model Ideas {
   id                  Int                   @id @default(autoincrement())
   name                String                @db.VarChar(255)
   description         String                @db.LongText
-  required_fund       String                @db.VarChar(255)
+  required_fund       Int                   @db.Int
   location            String                @db.MediumText
   status              Ideas_status          @default(panding)
   createdAt           DateTime              @default(now())
@@ -104,15 +106,15 @@ model Ideas {
   CategoryId          Int?
   EvaluationSurveiId  Int?
   Categories          Categories?           @relation(fields: [CategoryId], references: [id], map: "Ideas_ibfk_2")
-  Evaluation_surveis  Evaluation_surveis?   @relation(fields: [EvaluationSurveiId], references: [id], map: "Ideas_ibfk_3")
+  Evaluation_surveis  Evaluation_surveis[]
   Users               Users?                @relation(fields: [UserId], references: [id], map: "Ideas_ibfk_1")
   Files               Files[]
   Financial_reports   Financial_reports[]
   Fund_transactions   Fund_transactions[]
   Reject_fund_reasons Reject_fund_reasons[]
 
+
   @@index([CategoryId], map: "CategoryId")
-  @@index([EvaluationSurveiId], map: "EvaluationSurveiId")
   @@index([UserId], map: "UserId")
 }
 
