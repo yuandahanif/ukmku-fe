@@ -1,0 +1,22 @@
+## 1. Create a folder in a known location for you
+mkdir $PWD/postgres-data/
+
+## 2. run the postgres image
+docker run -d --name dev-postgres -e POSTGRES_PASSWORD=ukmku -v $PWD/postgres-data/:/var/lib/postgresql/data -p 5432:5432 postgres
+## or
+docker run --name dev-postgres -e POSTGRES_PASSWORD=123456 -v $PWD/postgres-data:/var/lib/postgresql/dat -d postgres
+
+## 3. check that the container is running
+docker ps
+
+## 4. stop if done
+docker stop dev-postgres
+
+## 5. check postgres network
+docker inspect dev-postgres -f "{{json .NetworkSettings.Networks }}"
+
+## opsional
+docker run --name dev-pgadmin -p 6969:80 \
+    -e 'PGADMIN_DEFAULT_EMAIL=user@domain.com' \
+    -e 'PGADMIN_DEFAULT_PASSWORD=123456' \
+    -d dpage/pgadmin4

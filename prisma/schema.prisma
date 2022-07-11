@@ -25,12 +25,12 @@ model Evaluation_surveis {
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
   EvaluationId Int?
-  IdeaId       Int?         @unique
+  IdeaId       Int?
   Evaluations  Evaluations? @relation(fields: [EvaluationId], references: [id], map: "Evaluation_surveis_ibfk_1")
   Idea         Ideas?       @relation(fields: [IdeaId], references: [id], map: "Evaluation_surveis_ibfk_2")
 
   @@index([EvaluationId], map: "EvaluationId")
-  @@index([IdeaId], map: "IdeaId_")
+  @@index([IdeaId], map: "IdeaId_to_survei")
 }
 
 model Evaluations {
