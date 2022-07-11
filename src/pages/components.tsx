@@ -137,7 +137,7 @@ export default function ComponentsPage() {
                 <h2 className='text-lg md:text-xl'>PrimaryLink</h2>
                 <p className={clsx('!mt-1 text-sm', textColor)}>
                   Add styling on top of UnstyledLink, giving a primary color to
-                  the link.
+                  the link .
                 </p>
                 <div className='space-x-2'>
                   <PrimaryLink href='/'>Internal Links</PrimaryLink>
