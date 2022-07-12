@@ -18,6 +18,7 @@ export default async function profit_statistic(
         by: ['year', 'month'],
         _sum: { profit: true, fund: true },
         where: { year: year },
+        orderBy: [{ month: 'asc' }],
       });
 
       return res.send({

@@ -129,7 +129,7 @@ const AdminIdeaReportIndex: NextPageWithLayoutAndAuth = () => {
 
   const reportTableData = useMemo(() => {
     if (profitQuery.data?.data) {
-      return profitQuery.data?.data;
+      return profitQuery.data?.data.reverse();
     }
 
     return [];
@@ -207,7 +207,7 @@ const AdminIdeaReportIndex: NextPageWithLayoutAndAuth = () => {
       <div className=''>
         <h2 className='mb-1 text-xl'>Laporan Keuangan</h2>
         <span className='mb-3 inline-block'>
-          Laporan terakhor pada: {profitQuery.data?.data[0].month}{' '}
+          Laporan terakhir pada: {profitQuery.data?.data[0].month}{' '}
           {profitQuery.data?.data[0].year}
         </span>
 

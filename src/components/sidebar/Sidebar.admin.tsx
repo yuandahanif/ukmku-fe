@@ -73,7 +73,7 @@ const SidebarAdmin = () => {
           </li>
           <li>
             <UnstyledLink
-              href='/'
+              href='/dashboard/admin/report'
               className={defaultClassName}
               activeClassName={activeClassName}
             >

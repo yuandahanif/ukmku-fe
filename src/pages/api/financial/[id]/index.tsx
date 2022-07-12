@@ -16,18 +16,25 @@ export default async function financial(
     if (session) {
       const schema = z.string();
       const id = schema.parse(req.query.id);
-      const financial = await prisma.financial_reports.findMany({
-        select: { id: true, fund: true, profit: true, month: true, year: true },
+      const financial = await prisma.financial_reports.findFirstOrThrow({
         where: {
-          IdeaId: Number(id),
+          id: Number(id),
         },
-        take: 12,
-        orderBy: [{ createdAt: 'desc' }],
+        include: {
+          Files: { select: { url: true, id: true } },
+          Ideas: {
+            select: { id: true },
+          },
+        },
+      });
+
+      const user = await prisma.users.findFirstOrThrow({
+        where: { Ideas: { some: { id: financial?.Ideas?.id } } },
       });
 
       return res.send({
         status: 'success',
-        data: financial,
+        data: { ...financial, User: user },
       });
     }
     throw new Error(
