@@ -101,7 +101,7 @@ const SidebarAdmin = () => {
           </li>
           <li>
             <UnstyledLink
-              href='/'
+              href='/dashboard/admin/evaluation'
               className={defaultClassName}
               activeClassName={activeClassName}
             >

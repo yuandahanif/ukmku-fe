@@ -8,7 +8,7 @@ module.exports = {
 
   // Uncoment to add domain whitelist
   images: {
-    domains: ['loremflickr.com'],
+    domains: ['loremflickr.com', 'external-preview.redd.it'],
   },
 
   // SVGR
