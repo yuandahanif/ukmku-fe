@@ -378,7 +378,7 @@ const FundedIdeaSection: React.FC<{ idea: ApiResponse }> = ({ idea }) => {
         <ArrowLink
           as={UnstyledLink}
           className='mt-8 inline-flex items-center'
-          href='/'
+          href={`/dashboard/admin/idea/${idea.id}/report`}
         >
           Detail Laporan Keuntungan
         </ArrowLink>
